@@ -3,3 +3,13 @@
 ################################################################################
 
 /DotNet/.vs/DotNet/v17/.suo
+/DotNet/WebAPI/bin/Debug/net6.0/ref/WebAPI.dll
+/DotNet/WebAPI/bin/Debug/net6.0/runtimes/unix/lib/netcoreapp2.1/System.Data.SqlClient.dll
+*.dll
+*.exe
+*.pdb
+/DotNet/WebAPI/bin/Debug/net6.0
+/DotNet/WebAPI/obj
+/DotNet/WebAppMVC/.vs/WebAppMVC
+/DotNet/WebAppMVC/bin/Debug/net6.0
+/DotNet/WebAppMVC/obj
