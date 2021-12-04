@@ -26,6 +26,18 @@ namespace C200.WebApi.Controllers
       }
 
       [AllowAnonymous]
+      [HttpPost("Authenticate")]
+      public IActionResult Authenticate([FromBody]Login credential)
+      {
+         var user = _accSvc.Authenticate(credential);
+
+         if (user == null)
+            return BadRequest(new { message = "Username or password is incorrect" });
+         
+         return Ok(user.Token);
+      }
+
+      [Authorize(Roles = "manager")]
       [HttpGet("Roles")]
       public ActionResult<IEnumerable<string>> Get()
       {
@@ -38,23 +50,16 @@ namespace C200.WebApi.Controllers
          return result;
       }
 
-      [AllowAnonymous]
-      [HttpPost("Authenticate")]
-      public IActionResult Authenticate([FromBody]Login credential)
-      {
-         var user = _accSvc.Authenticate(credential);
-
-         if (user == null)
-            return BadRequest(new { message = "Username or password is incorrect" });
-         
-         return Ok(user.Token);
-      }
-
       [Authorize(Roles = "admin")]
-      [HttpGet("GetAll")]
+      [HttpGet("Users")]
       public IActionResult GetAll()
       {
-         var users = _accSvc.GetAll();
+         var users = 
+            _accSvc
+               .GetAll()
+               .Select(
+                  user => new {user.UserId, user.FullName, user.Email, user.UserRole})
+               .ToList();
         
          return Ok(users);
       }
@@ -69,7 +74,7 @@ namespace C200.WebApi.Controllers
             return NotFound();
          }
          
-         return Ok(user);
+         return Ok(new {user.UserId, user.FullName, user.Email, user.UserRole});
       }
    }
 }
