@@ -8,7 +8,7 @@ namespace C200.WebApi.Services;
 
 public interface IAccountService
 {
-   SysUser? Authenticate(string username, string password);
+   SysUser? Authenticate(Login credential);
    SysUser? GetById(string id);
    IEnumerable<SysUser> GetAll();
 }
@@ -31,26 +31,28 @@ public class AccountService : IAccountService
 
    private const string LOGIN_SQL =
       @"SELECT * FROM SysUser 
-            WHERE UserId = '{0}' 
-              AND UserPw = HASHBYTES('SHA1', CONVERT(VARCHAR, '{1}'))";
+         WHERE UserId = '{0}' 
+           AND UserPw = HASHBYTES('SHA1', CONVERT(VARCHAR, '{1}'))";
 
    private const string LASTLOGIN_SQL =
       @"UPDATE SysUser SET LastLogin=GETDATE() WHERE UserId='{0}'";
 
-   public SysUser? Authenticate(string uid, string upw)
+   // public SysUser? Authenticate(string uid, string upw)
+   public SysUser? Authenticate(Login credential)
    {
-      List<SysUser> list = _dbs.GetList<SysUser>(LOGIN_SQL, uid, upw);
+      List<SysUser> list = 
+         _dbs.GetList<SysUser>(LOGIN_SQL, credential.UserId, credential.Password);
       if (list.Count != 1)
          return null;
 
       // Update the Last Login Timestamp of the User
-      _dbs.ExecSQL(LASTLOGIN_SQL, uid);
+      _dbs.ExecSQL(LASTLOGIN_SQL, credential.UserId);
 
       var user = list[0];
 
       // Generate JWT Token
       var tokenHandler = new JwtSecurityTokenHandler();
-      var key = Encoding.ASCII.GetBytes(SECRET ?? "NO KEY !!");
+      var key = Encoding.ASCII.GetBytes(SECRET ?? "SIGN_&_VERIFY_JWT_TOKENS");
       var tokenDescriptor = new SecurityTokenDescriptor
       {
          Subject =
@@ -61,6 +63,7 @@ public class AccountService : IAccountService
                     new Claim(ClaimTypes.Role, user.UserRole)
                }),
          Expires = DateTime.UtcNow.AddDays(7),
+         // Expires= DateTime.UtcNow.AddMinutes(120),
          SigningCredentials =
             new SigningCredentials(
                new SymmetricSecurityKey(key),

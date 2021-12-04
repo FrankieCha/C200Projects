@@ -1,14 +1,13 @@
-﻿using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Mvc;
-using System;
-using System.Collections.Generic;
-using System.Data;
-using System.Linq;
-using C200.WebApi.Models;
+﻿using C200.WebApi.Models;
 using C200.WebApi.Services;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
+using System.Data;
 
 
 // http://jasonwatmore.com/post/2019/01/08/aspnet-core-22-role-based-authorization-tutorial-with-example-api#users-controller-cs
+
+// https://www.c-sharpcorner.com/article/authentication-authorization-using-net-core-web-api-using-jwt-token-and/
 namespace C200.WebApi.Controllers
 {
    [Authorize]
@@ -16,21 +15,21 @@ namespace C200.WebApi.Controllers
    [Route("api/[controller]")]
    public class UsersController : ControllerBase
    {
-      private IAccountService _usvc;
-      private IDBService _dbsvc;
+      private readonly IAccountService _accSvc;
+      private readonly IDBService _sbSvc;
 
-      public UsersController(IAccountService userService,
+      public UsersController(IAccountService accountService,
                              IDBService dbService)
       {
-         _usvc = userService;
-         _dbsvc = dbService;
+         _accSvc = accountService;
+         _sbSvc = dbService;
       }
 
       [AllowAnonymous]
-      [HttpGet("xyz")]
+      [HttpGet("Roles")]
       public ActionResult<IEnumerable<string>> Get()
       {
-         DataTable dt = _dbsvc.GetTable("SELECT DISTINCT UserRole FROM SysUser");
+         DataTable dt = _sbSvc.GetTable("SELECT DISTINCT UserRole FROM SysUser");
          List<String> result = dt
             .AsEnumerable()
             .Select(row => new String((String)row["UserRole"]))
@@ -40,42 +39,36 @@ namespace C200.WebApi.Controllers
       }
 
       [AllowAnonymous]
-      [HttpPost("authenticate")]
-      public IActionResult Authenticate([FromBody]SysUser userParam)
+      [HttpPost("Authenticate")]
+      public IActionResult Authenticate([FromBody]Login credential)
       {
-         var user = _usvc.Authenticate(userParam.UserId, userParam.Password);
+         var user = _accSvc.Authenticate(credential);
 
          if (user == null)
             return BadRequest(new { message = "Username or password is incorrect" });
-
+         
          return Ok(user.Token);
       }
 
       [Authorize(Roles = "admin")]
-      [HttpGet("getall")]
+      [HttpGet("GetAll")]
       public IActionResult GetAll()
       {
-         var users = _usvc.GetAll();
+         var users = _accSvc.GetAll();
+        
          return Ok(users);
       }
 
+      [Authorize]
       [HttpGet("{id}")]
       public IActionResult GetById(string id)
       {
-         var user = _usvc.GetById(id);
-
+         var user = _accSvc.GetById(id);
          if (user == null)
          {
             return NotFound();
          }
-
-         // only allow admins to access other user records
-         //var currentUserId = int.Parse(User.Identity.Name);
-         //if (id != currentUserId && !User.IsInRole(Role.Admin))
-         //{
-         //   return Forbid();
-         //}
-
+         
          return Ok(user);
       }
    }
