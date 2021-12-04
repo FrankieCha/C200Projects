@@ -37,7 +37,6 @@ public class AccountService : IAccountService
    private const string LASTLOGIN_SQL =
       @"UPDATE SysUser SET LastLogin=GETDATE() WHERE UserId='{0}'";
 
-   // public SysUser? Authenticate(string uid, string upw)
    public SysUser? Authenticate(Login credential)
    {
       List<SysUser> list = 
