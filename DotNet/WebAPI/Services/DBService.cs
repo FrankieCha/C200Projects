@@ -11,7 +11,7 @@ public interface IDBService
    List<dynamic> GetList(string sql, params object[] list);
    DataTable GetTable(string sql, params object[] list);
    int ExecSQL(string sql, params object[] list);
-   string GetLastErrMsg();
+   // string GetLastErrMsg();
 }
 
 public class DBService : IDBService
@@ -30,10 +30,10 @@ public class DBService : IDBService
    private string DB_SQL = "";
    private string DB_Message = "";
 
-   public string GetLastErrMsg()
-   {
-      return DB_Message;
-   }
+   //public string GetLastErrMsg()
+   //{
+   //   return DB_Message;
+   //}
 
    public List<dynamic> GetList(string sql, params object[] list)
    {
@@ -56,14 +56,14 @@ public class DBService : IDBService
       DataTable dt = new();
       using SqlConnection dbConn = new(DB_CONNECTION);
       using SqlDataAdapter dAdptr = new(DB_SQL, dbConn);
-      try
-      {
+      //try
+      //{
          dAdptr.Fill(dt);
-      }
-      catch (System.Exception ex)
-      {
-         DB_Message = ex.Message;
-      }
+      //}
+      //catch (System.Exception ex)
+      //{
+      //   DB_Message = ex.Message;
+      //}
       return dt;
       // dbConn and dAdptr automatically close
    }
@@ -80,17 +80,17 @@ public class DBService : IDBService
       using (SqlConnection dbConn = new(DB_CONNECTION))
       using (SqlCommand dbCmd = dbConn.CreateCommand())
       {
-         try
-         {
+         //try
+         //{
             dbConn.Open();
             dbCmd.CommandText = DB_SQL;
             rowsAffected = dbCmd.ExecuteNonQuery();
-         }
-         catch (System.Exception ex)
-         {
-            DB_Message = ex.Message;
-            rowsAffected = -1;
-         }
+         //}
+         //catch (System.Exception ex)
+         //{
+         //   DB_Message = ex.Message;
+         //   rowsAffected = -1;
+         //}
       }
       return rowsAffected;
    }
