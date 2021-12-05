@@ -26,7 +26,7 @@ public class DBService : IDBService
          .Build()
          .GetSection("ConnectionStrings");
 
-   private static readonly string? DB_CONNECTION = config.GetValue<String>("DefaultConnection");
+   private static readonly string DB_CONNECTION = config.GetValue<String>("DefaultConnection") ?? "";
    private string DB_SQL = "";
    private string DB_Message = "";
 

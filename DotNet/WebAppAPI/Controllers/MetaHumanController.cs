@@ -12,10 +12,13 @@ namespace C200.WebAppAPI.Controllers;
 public class MetaHumanController : Controller
 {
    private readonly IDBService _dbSvc;
+   private readonly IWebHostEnvironment _env;
 
-   public MetaHumanController(IDBService dbService)
+   public MetaHumanController(IDBService dbService,
+                              IWebHostEnvironment env)
    {
       _dbSvc = dbService;
+      _env = env;
    }
 
    //
@@ -35,7 +38,7 @@ public class MetaHumanController : Controller
    public IActionResult Get(string id)
    {
       List<DataRecord> dbList = _dbSvc.GetList<DataRecord>($"SELECT * FROM DataRecord WHERE Field0='{id}'");
-      if (dbList.Count >0)
+      if (dbList.Count > 0)
          return Ok(dbList[0]);
       else
          return NotFound();
@@ -108,5 +111,25 @@ public class MetaHumanController : Controller
          return BadRequest(new { Message = "Delete Failed" });
 
    }
+
+   [HttpPost("{id}/Picture")]
+   public async Task<IActionResult> UploadPicture([FromRoute]string id, IFormFile photo)
+   {
+      string fext = Path.GetExtension(photo.FileName);
+      string uname = Guid.NewGuid().ToString();
+      string fname = id + "_" + uname + fext;
+
+      string path = Path.Combine(_env.WebRootPath, "profile\\" + fname);
+      using (var stream = new FileStream(path, FileMode.Create))
+      {
+         await photo.CopyToAsync(stream);
+         stream.Close();
+      }
+      return Ok(fname);
+   }
+
+
+
+
 }
 
