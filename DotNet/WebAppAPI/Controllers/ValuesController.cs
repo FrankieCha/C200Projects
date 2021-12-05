@@ -1,6 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 
-namespace C200.WebApi.Controllers;
+namespace C200.WebAppAPI.Controllers;
 
 [ApiExplorerSettings(IgnoreApi = true)] // Suppress Swagger
 

@@ -1,5 +1,5 @@
-﻿using C200.WebApi.Models;
-using C200.WebApi.Services;
+﻿using C200.WebAppAPI.Models;
+using C200.WebAppAPI.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Data;
@@ -7,7 +7,7 @@ using System.Data;
 // http://jasonwatmore.com/post/2019/01/08/aspnet-core-22-role-based-authorization-tutorial-with-example-api#users-controller-cs
 // https://www.c-sharpcorner.com/article/authentication-authorization-using-net-core-web-api-using-jwt-token-and/
 
-namespace C200.WebApi.Controllers;
+namespace C200.WebAppAPI.Controllers;
 
 [Authorize]
 [ApiController]

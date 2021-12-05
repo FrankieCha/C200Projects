@@ -3,7 +3,7 @@ using System.Data.SqlClient;
 using System.Dynamic;
 using System.Reflection;
 
-namespace C200.WebApi.Services;
+namespace C200.WebAppAPI.Services;
 
 public interface IDBService
 {

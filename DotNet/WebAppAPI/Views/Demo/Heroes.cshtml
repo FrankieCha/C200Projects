@@ -1,0 +1,82 @@
+﻿
+@model List<DataRecord>
+
+@section MoreScripts {
+   <link href="~/lib/datatables/css/jquery.dataTables.min.css" rel="stylesheet" />
+   <script src="~/lib/datatables/js/jquery.dataTables.min.js"></script>
+
+   <script>
+      $(document).ready(function () {
+         $('#jsMovieTable').DataTable({
+            paging: true,
+            ordering: true,
+            searching: true,
+            info: true,
+            lengthMenu: [[6, 10, 20, -1], [6, 10, 20, "All"]]
+         });
+      });
+   </script>
+}
+
+
+<h2>Heroes</h2>
+
+@if (TempData["Message"] != null)
+{
+   <div class="alert alert-@TempData["MsgType"]">
+      @TempData["Message"]
+   </div>
+}
+
+<table id="jsMovieTable" class="table">
+   <thead>
+      <tr>
+         <th scope="col">Hero</th>
+         <th scope="col">Name</th>
+         <th scope="col">Integer</th>
+         <th scope="col">Double</th>
+         <th scope="col">Boolean</th>
+         <th scope="col">Date/Time</th>
+
+         @if (User.IsInRole("manager"))
+         {
+            <th scope="col">Operation</th>
+         }
+
+      </tr>
+   </thead>
+   <tbody>
+      @foreach (DataRecord mv in Model)
+      {
+      <tr>
+         <td>@mv.Field1</td>
+         <td>@mv.Field2</td>
+         <td>@mv.Field3</td>
+         <td>@mv.Field4</td>
+         <td>@mv.Field5</td>
+
+         <td>@String.Format("{0:MMM yyyy}", mv.Field6)</td>
+
+
+         @if (User.IsInRole("manager"))
+         {
+            <td>
+               <a asp-controller="Demo" asp-action="Edit"
+                  asp-route-id="@mv.Field0">Edit</a>
+               |
+               <a asp-controller="Demo" asp-action="Delete"
+                  asp-route-id="@mv.Field0"
+                  onclick="return confirm('Are you sure you want to delete: @mv.Field1?')">
+                  Delete
+               </a>
+            </td>
+         }
+
+      </tr>
+      }
+   </tbody>
+</table>
+
+
+
+

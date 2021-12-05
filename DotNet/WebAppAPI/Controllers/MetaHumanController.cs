@@ -1,9 +1,9 @@
-﻿using C200.WebApi.Models;
-using C200.WebApi.Services;
+﻿using C200.WebAppAPI.Models;
+using C200.WebAppAPI.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
-namespace C200.WebApi.Controllers;
+namespace C200.WebAppAPI.Controllers;
 
 // [Authorize]
 [AllowAnonymous]

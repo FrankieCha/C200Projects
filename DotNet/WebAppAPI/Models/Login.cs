@@ -2,7 +2,7 @@
 
 #nullable disable
 
-namespace C200.WebApi.Models;
+namespace C200.WebAppAPI.Models;
 
 public class Login
 {

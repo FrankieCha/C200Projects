@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 
 #nullable disable
 
-namespace C200.WebApi.Models;
+namespace C200.WebAppAPI.Models;
 
 public class DataRecord
 {

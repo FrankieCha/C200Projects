@@ -1,10 +1,10 @@
-using C200.WebApi.Models;
+using C200.WebAppAPI.Models;
 using Microsoft.IdentityModel.Tokens;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
 
-namespace C200.WebApi.Services;
+namespace C200.WebAppAPI.Services;
 
 public interface IAccountService
 {
